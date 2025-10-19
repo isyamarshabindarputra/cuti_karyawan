@@ -46,10 +46,6 @@
             <a href="{{ route('pengajuans.index') }}" 
             class="block bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow">
             ➤ Data Pengajuan
-            <a href="{{ route('documents.index') }}" 
-            class="block bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg shadow">
-           ➤ Ducument
-               </a>
                 </div>
                 </div>
             </div>

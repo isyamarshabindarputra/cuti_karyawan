@@ -50,25 +50,6 @@ Route::put('/pengajuans/{karyawan_id}', [PengajuanController::class,
 Route::delete('pengajuans/{karyawan_id}',[PengajuanController::class, 
 'destroy'])->name('pengajuans.destroy');
 
-// ini bagian dari link/url tampilan cuti
-Route::get('/cutis',[CutiController::class, 
-'index'])->middleware('auth')->name('cutis.index');
-
-Route::get('/cutis/create',[CutiController::class, 
-'create'])->name('cutis.create');
-
-Route::post('/cutis',[CutiController::class, 
-'store'])->name('cutis.store');
-
-Route::get('/cutis/{cutis}/edit',[CutiController::class, 
-'edit'])->name('cutis.edit');
-
-Route::put('/cutis/{cutiss}',[CutiController::class, 
-'update'])->name('cutis.update');
-
-Route::delete('cutis/{cutis}',[CutiController::class, 
-'destroy'])->name('cutis.destroy');
-
 // ini bagian dari link/url tampilan register, login dan logout
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
@@ -98,10 +79,3 @@ Route::middleware('auth')->group(function () {
         return redirect()->route('dashboard');
     });
 });
-
-// ini resource buat mengarahkan document
-Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');   // Tampilkan semua dokumen
-Route::get('/documents/create', [DocumentController::class, 'create'])->name('documents.create'); // Form upload
-Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store');   // Simpan file
-Route::get('/documents/{id}', [DocumentController::class, 'show'])->name('documents.show'); // Lihat PDF
-Route::delete('/documents/{id}', [DocumentController::class, 'destroy'])->name('documents.destroy'); // Hapus file
