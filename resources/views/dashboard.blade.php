@@ -31,7 +31,6 @@
                 <div class="bg-blue-100 p-4 rounded-lg">
                     <h3 class="text-lg font-semibold mb-2">Informasi Pengguna</h3>
                     <p><strong>Nama:</strong> {{ Auth::user()->name }}</p>
-                    <p><strong>Email:</strong> {{ Auth::user()->email }}</p>
                     <p><strong>Role:</strong> {{ Auth::user()->role }}</p>
                     <p><strong>Terdaftar sejak:</strong> {{ Auth::user()->created_at->format('d M Y') }}</p>
                 </div>
