@@ -1,101 +1,109 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="bg-white rounded-lg shadow-md p-6">
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-semibold text-gray-800">Data Karyawan</h2>
-        <a href="{{ route('karyawans.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center">
+<div class="min-h-screen bg-blue-50 p-10">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-semibold text-blue-700">Data Karyawan</h1>
+        <a href="{{ route('karyawans.create') }}" 
+           class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow transition flex items-center">
             <i class="fas fa-plus mr-2"></i> Tambah Karyawan
         </a>
-        <a href="{{ route('dashboard') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center">
-            <i class="fas fa-plus mr-2"></i> Kembali
-        </a>
-    </div><br><br>
+    </div>
 
-
-    <!-- tampilan buat mencari data yg sesuai di panggil -->
-    <form action="{{ route('karyawans.index') }}" method="GET">
-        <input type="text" name="search" placeholder="Cari Karyawan..." value="{{ request('search') }}">
-        <button type="submit">Cari</button>
+    <!-- Form pencarian -->
+    <form action="{{ route('karyawans.index') }}" method="GET" class="mb-6 flex items-center space-x-2">
+        <input type="text" name="search" placeholder="Cari Karyawan..."
+               value="{{ request('search') }}"
+               class="border border-blue-200 focus:ring-blue-400 focus:border-blue-400 rounded-lg px-4 py-2 w-64 shadow-sm">
+        <button type="submit"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+            Cari
+        </button>
     </form>
 
-    <div class="overflow-x-auto">
-        <table class="min-w-full bg-white">
-            <thead>
-                <tr class="bg-gray-200 text-gray-700">
-                    <th class="py-3 px-4 text-left">#</th>
-                    <th class="py-3 px-4 text-left">NIP</th>
-                    <th class="py-3 px-4 text-left">Nama Lengkap</th>
-                    <th class="py-3 px-4 text-left">Jenis Kelamin</th>
-                    <th class="py-3 px-4 text-left">Jabatan</th>
-                    <th class="py-3 px-4 text-left">Bidang</th>
-                    <th class="py-3 px-4 text-left">Sisa Cuti</th>
-                    <th class="py-3 px-4 text-left">Actions</th>
+    <!-- Tabel data -->
+    <div class="bg-white shadow-lg rounded-2xl overflow-hidden">
+        <table class="min-w-full border-collapse">
+            <thead class="bg-blue-600 text-white">
+                <tr>
+                    <th class="px-4 py-3 text-left">No</th>
+                    <th class="px-4 py-3 text-left">NIP</th>
+                    <th class="px-4 py-3 text-left">Nama Lengkap</th>
+                    <th class="px-4 py-3 text-left">Jenis Kelamin</th>
+                    <th class="px-4 py-3 text-left">Jabatan</th>
+                    <th class="px-4 py-3 text-left">Bidang</th>
+                    <th class="px-4 py-3 text-left">Sisa Cuti</th>
+                    <th class="px-4 py-3 text-left">Aksi</th>
                 </tr>
             </thead>
-    </div>
-    <tbody>
-    @forelse($karyawans as $index => $k)
-        <tr class="border-b-2 border-gray-400 hover:bg-gray-50">
-            <td>{{ $loop->iteration + ($karyawans->currentPage() - 1) * $karyawans->perPage() }}</td>
-            <td class="py-3 px-4">{{ $k->nip }}</td>
-            <td class="py-3 px-4">{{ $k->name }}</td>
-            <td class="py-3 px-4">{{ $k->jenis_kelamin }}</td>
-            <td class="py-3 px-4">{{ $k->jabatan ?? '-' }}</td>
-            <td class="py-3 px-4">{{ $k->bidang }}</td>
-            <td class="py-3 px-4">{{ $k->sisa_cuti }} hari</td>
-            <td class="py-3 px-4">
-            <a href="{{ route('pengajuans.create', ['karyawan_id' => $k->id]) }}" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i>Pengajuan Cuti
-            </a>
+            <tbody class="text-gray-700">
+                @forelse($karyawans as $k)
+                    <tr class="border-b hover:bg-blue-50 transition">
+                        <td class="px-4 py-3">{{ $loop->iteration }}</td>
+                        <td class="px-4 py-3">{{ $k->nip }}</td>
+                        <td class="px-4 py-3">{{ $k->name }}</td>
+                        <td class="px-4 py-3">{{ $k->jenis_kelamin }}</td>
+                        <td class="px-4 py-3">{{ $k->jabatan ?? '-' }}</td>
+                        <td class="px-4 py-3">{{ $k->bidang }}</td>
+                        <td class="px-4 py-3">{{ $k->sisa_cuti }} hari</td>
+                        <td class="px-4 py-3">
+                            <div class="flex flex-col space-y-2">
+                                <!-- Tombol hijau Pengajuan Cuti -->
+                                <a href="{{ route('pengajuans.create', ['karyawan_id' => $k->id]) }}" 
+                                   class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-center shadow-sm transition">
+                                    <i class="fas fa-plane-departure mr-1"></i> Pengajuan Cuti
+                                </a>
 
-            <a href="{{ route('karyawans.show', $k->id) }}" class="btn btn-sm btn-info" title="Lihat Detail">
-                <i class="fas fa-eye">Lihat Details</i>
-            </a>
-            </td>
-            <td class="py-3 px-4">
-                <div class="flex justify-center space-x-2">
-                    <a href="{{ route('karyawans.edit', $k->id) }}" class="text-green-500 hover:text-green-700">
-                        <i class="fas fa-edit">Edit</i>
-                    </a>
-                <form action="{{ route('karyawans.destroy', $k->id) }}" method="POST" class="inline">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')" class="text-red-500 hover:text-red-700">
-                        <i class="fas fa-trash">Hapus</i>
-                    </button>
-                </form>
-                </div>
-            </td>
-        </tr>
+                                <!-- Tombol kuning Lihat Detail -->
+                                <a href="{{ route('karyawans.show', $k->id) }}" 
+                                   class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded-md text-center shadow-sm transition">
+                                    <i class="fas fa-eye mr-1"></i> Lihat Detail
+                                </a>
 
-    <tr>
-        <td colspan="9"><hr class="border-t-2 border-gray-300 my-2"></td>
-    </tr>
-
-    @empty
-    <tr>
-        <td colspan="9" class="py-4 px-4 text-center">Tidak ada data karyawan.</td>
-    </tr>
-
-    @endforelse
-    </tbody>
-
+                                <!-- Baris edit dan hapus -->
+                                <div class="flex justify-center space-x-2 pt-1">
+                                    <a href="{{ route('karyawans.edit', $k->id) }}" 
+                                       class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm shadow">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <form action="{{ route('karyawans.destroy', $k->id) }}" method="POST" 
+                                          onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" 
+                                                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm shadow">
+                                            <i class="fas fa-trash"></i> Hapus
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="8" class="text-center text-gray-500 py-6">Tidak ada data karyawan.</td>
+                    </tr>
+                @endforelse
+            </tbody>
         </table>
-        {{ $karyawans->links() }}
+    </div>
 
-        <!-- ini buat notif data yang berhasil di input -->
-        @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+    <!-- Pagination -->
+    <div class="mt-6">
+        {{ $karyawans->links() }}
+    </div>
+
+    <!-- Notifikasi -->
+    @if(session('success'))
+        <div class="mt-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg shadow-sm">
             {{ session('success') }}
         </div>
-        @endif
-        <!-- ini buat notif data yang gagal di input -->
-        @if(session('error'))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+    @endif
+
+    @if(session('error'))
+        <div class="mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-sm">
             {{ session('error') }}
         </div>
-        @endif
-
+    @endif
 </div>
 @endsection

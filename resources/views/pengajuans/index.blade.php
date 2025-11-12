@@ -1,83 +1,90 @@
 @extends('layouts.app')
 
-@section('content')
-<div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h2 class="mb-0">Data Cuti Karyawan</h2>
-    <a href="{{ route('dashboard') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center">
-            <i class="fas fa-plus mr-2"></i> Kembali
-        </a>
-    </div><br><br>
+@section('title', 'Data Pengajuan')
 
-    <form action="{{ route('pengajuans.index') }}" method="GET">
-        <input type="text" name="search" placeholder="Cari Pengajuan..." value="{{ request('search') }}">
-        <button type="submit">Cari</button>
+@section('content')
+<div class="min-h-screen bg-blue-50 p-10">
+
+    <!-- Judul halaman -->
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-semibold text-blue-700">Data Cuti Karyawan</h1>
+    </div>
+
+    <!-- Pencarian -->
+    <form action="{{ route('pengajuans.index') }}" method="GET" class="mb-6 flex items-center space-x-2">
+        <input type="text" name="search" placeholder="Cari Pengajuan..."
+               value="{{ request('search') }}"
+               class="border border-blue-200 focus:ring-blue-400 focus:border-blue-400 rounded-lg px-4 py-2 w-64">
+        <button type="submit"
+                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+            Cari
+        </button>
     </form>
 
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered">
-                <thead class="table-dark">
-                    <tr>
-                        <th>#</th>
-                        <th>Nama Karyawan</th>
-                        <th>Jenis Cuti</th>
-                        <th>Tanggal Mulai</th>
-                        <th>Tanggal Selesai</th>
-                        <th>Jumlah Hari</th>
-                        <th>Keterangan</th>
-                        <th>Bidang</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($pengajuans as $index => $p)
-                    <tr class="border-b-2 border-gray-400 hover:bg-gray-50">
-                        <td class="py-3 px-4">{{ $loop->iteration + ($pengajuans->currentPage() - 1) * $pengajuans->perPage() }}</td>
-                        <td class="py-3 px-4">{{ $p->karyawan->name }}</td>
-                        <td class="py-3 px-4">{{ $p->jenis_cuti }}</td>
-                        <td class="py-3 px-4">{{ $p->tanggal_mulai }}</td>
-                        <td class="py-3 px-4">{{ $p->tanggal_selesai }}</td>
-                        <td class="py-3 px-4">{{ $p->jumlah_hari }} hari</td>
-                        <td class="py-3 px-4">{{ $p->keterangan }}</td>
-                        <td class="py-3 px-4">{{ $p->karyawan->bidang }}</td>
-                        <td class="py-3 px-4">
-                            
-
-                            <div class="btn-group" role="group">
-                                <a href="{{ route('pengajuans.edit', $p->id) }}" class="btn btn-sm btn-warning" title="Edit">
-                                    <i class="fas fa-edit">Edit</i>
-                                </a>
-                                
-                                <form action="{{ route('pengajuans.destroy', $p->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" 
-                                            onclick="return confirm('Apakah Anda yakin ingin menghapus data cuti ini?')"
-                                            title="Hapus">
-                                        <i class="fas fa-trash">Hapus</i>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="9"><hr class="border-t-2 border-gray-300 my-2"></td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="9" class="py-4 px-4 text-center">Tidak ada data pengajuan.</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </div>
-        <!-- ini buat notif data yang berhasil di input -->
-        @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+    <!-- Notif sukses -->
+    @if(session('success'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
             {{ session('success') }}
         </div>
+    @endif
+
+    <!-- ini buat notif data yang gagal di input -->
+        @if(session('error'))
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {{ session('error') }}
+        </div>
         @endif
+
+    <!-- Tabel data -->
+    <div class="bg-white shadow-md rounded-2xl overflow-hidden">
+        <table class="min-w-full border-collapse">
+            <thead class="bg-blue-600 text-white">
+                <tr>
+                    <th class="px-4 py-3 text-left">No</th>
+                    <th class="px-4 py-3 text-left">Nama Karyawan</th>
+                    <th class="px-4 py-3 text-left">Jenis Cuti</th>
+                    <th class="px-4 py-3 text-left">Tanggal Mulai</th>
+                    <th class="px-4 py-3 text-left">Tanggal Selesai</th>
+                    <th class="px-4 py-3 text-left">Jumlah Hari</th>
+                    <th class="px-4 py-3 text-left">Keterangan</th>
+                    <th class="px-4 py-3 text-left">Bidang</th>
+                    <th class="px-4 py-3 text-left">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($pengajuans as $p)
+                    <tr class="border-b hover:bg-blue-50">
+                        <td class="px-4 py-3">{{ $loop->iteration }}</td>
+                        <td class="px-4 py-3">{{ $p->karyawan->name }}</td>
+                        <td class="px-4 py-3">{{ $p->jenis_cuti }}</td>
+                        <td class="px-4 py-3">{{ $p->tanggal_mulai }}</td>
+                        <td class="px-4 py-3">{{ $p->tanggal_selesai }}</td>
+                        <td class="px-4 py-3">{{ $p->jumlah_hari }} hari</td>
+                        <td class="px-4 py-3">{{ $p->keterangan }}</td>
+                        <td class="px-4 py-3">{{ $p->karyawan->bidang }}</td>
+                        <td class="px-4 py-3 flex space-x-2">
+                            <a href="{{ route('pengajuans.edit', $p->id) }}"
+                               class="bg-blue-400 hover:bg-blue-500 text-white px-3 py-1 rounded-md text-sm">
+                               Edit
+                            </a>
+                            <form action="{{ route('pengajuans.destroy', $p->id) }}" method="POST"
+                                  onsubmit="return confirm('Apakah Anda yakin ingin menghapus data cuti ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm">
+                                    Hapus
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="9" class="px-4 py-6 text-center text-gray-500">Tidak ada data pengajuan.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 </div>
 @endsection
