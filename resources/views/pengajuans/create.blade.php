@@ -4,12 +4,12 @@
 
 @section('content')
 <div class="max-w-3xl mx-auto">
-    <h2 class="text-3xl font-semibold text-blue-700 mb-8">Form Pengajuan Cuti untuk {{ $karyawan->name }}</h2>
+    <h2 class="text-3xl font-semibold text-blue-700 mb-8">Form Pengajuan Cuti untuk {{ $karyawans->name }}</h2>
 
-    <form action="{{ route('pengajuans.store', ['karyawan_id' => $karyawan->id]) }}" method="POST">
+    <form action="{{ route('pengajuans.store', ['karyawan_id' => $karyawans->id]) }}" method="POST">
         @csrf
 
-        <input type="hidden" name="karyawan_id" value="{{ $karyawan->id }}">
+        <input type="hidden" name="karyawan_id" value="{{ $karyawans->id }}">
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
@@ -51,7 +51,7 @@
         </div>
 
         <div class="flex justify-end pt-4">
-            <a href="{{ route('karyawans.show', $karyawan->id) }}"
+            <a href="{{ route('karyawans.show', $karyawans->id) }}"
                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-5 py-2 rounded-xl mr-2">
                 Batal
             </a>
