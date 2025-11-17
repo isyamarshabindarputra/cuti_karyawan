@@ -81,7 +81,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="text-center text-gray-500 py-6">Tidak ada data karyawan.</td>
+                        <td colspan="8" class="text-center text-gray-500 py-6">Tidak ada data karyawan</td>
                     </tr>
                 @endforelse
             </tbody>
