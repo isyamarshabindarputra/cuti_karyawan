@@ -13,11 +13,13 @@ class KaryawanController extends Controller
     public function index(Request $request)
     {
         // ini buat mengambil query dari table karyawan
-        $query = Karyawan::query();
+        $query = Karyawan::query()->where('user_id', Auth::id());
 
         // kalau ada pencarian 
         if($request->has('search') && $request->search != ''){
-            $query->where('name', 'like', '%' . $request->search . '%')
+            // ini
+            $query->where('nip', 'like', '%' . $request->search . '%')
+            ->orWhere('name', 'like', '%' . $request->search . '%')
             ->orWhere('jabatan', 'like', '%' . $request->search . '%')
             ->orWhere('bidang', 'like', '%' . $request->search . '%');
         }

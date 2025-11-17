@@ -41,12 +41,6 @@ Route::get('/pengajuans/create/{karyawan_id}', [PengajuanController::class,
 Route::post('/pengajuans/{karyawan_id}', [PengajuanController::class, 
 'store'])->name('pengajuans.store');
 
-Route::get('/pengajuans/{karyawan_id}/edit', [PengajuanController::class,
-'edit'])->name('pengajuans.edit');
-
-Route::put('/pengajuans/{karyawan_id}', [PengajuanController::class, 
-'update'])->name('pengajuans.update');
-
 Route::delete('pengajuans/{karyawan_id}',[PengajuanController::class, 
 'destroy'])->name('pengajuans.destroy');
 
@@ -58,9 +52,6 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-Route::get('/karyawan', [KaryawanController::class, 'index'])->name('karyawan.index');
-Route::get('/pengajuans', [PengajuanController::class, 'index'])->name('pengajuans.index');
 
 // // ini bagian dari link/url tampilan dashboard
 // Route::get('/dashboard', function () {
@@ -79,3 +70,6 @@ Route::middleware('auth')->group(function () {
         return redirect()->route('dashboard');
     });
 });
+
+// ini resource buat mengarahkan document
+Route::resource('documents', DocumentController::class)->except(['edit', 'update']);

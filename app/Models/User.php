@@ -34,6 +34,11 @@ class User extends Authenticatable
     {
         return $this->hasOne(Karyawan::class);
     }
+
+    public function pengajuan()
+    {
+        return $this->hasMany(Pengajuan::class);
+    }
     
     public function isAdmin()
     {
