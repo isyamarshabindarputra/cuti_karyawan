@@ -7,17 +7,20 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class KaryawanController extends Controller
 {
     public function index(Request $request)
     {
         // ini buat mengambil query dari table karyawan
-        $query = Karyawan::query();
+        $query = Karyawan::query()->where('user_id', Auth::id());
 
         // kalau ada pencarian 
         if($request->has('search') && $request->search != ''){
-            $query->where('name', 'like', '%' . $request->search . '%')
+            // ini
+            $query->where('nip', 'like', '%' . $request->search . '%')
+            ->orWhere('name', 'like', '%' . $request->search . '%')
             ->orWhere('jabatan', 'like', '%' . $request->search . '%')
             ->orWhere('bidang', 'like', '%' . $request->search . '%');
         }
@@ -76,9 +79,20 @@ class KaryawanController extends Controller
 
     public function destroy(Karyawan $karyawans): RedirectResponse
     {
-        $karyawans->delete();
+        try {
+            // gunakan transaction untuk memastikan atomicity
+            DB::transaction(function () use ($karyawans) {
+                // hapus semua pengajuan terkait karyawan (juga menghandle cascade di DB)
+                $karyawans->pengajuan()->delete();
+                // hapus karyawan
+                $karyawans->delete();
+            });
 
-        return redirect()->route('karyawan.index')
-            ->with('success', 'Data karyawan berhasil dihapus.');
+            return redirect()->route('karyawans.index')
+                ->with('success', 'Data karyawan dan semua pengajuan terkait berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->route('karyawans.index')
+                ->with('error', 'Gagal menghapus data karyawan: ' . $e->getMessage());
+        }
     }
 }
