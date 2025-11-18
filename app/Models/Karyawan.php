@@ -22,6 +22,17 @@ class Karyawan extends Model
         'sisa_cuti',
     ];
 
+    public static function booted()
+    {
+        static::deleting(function ($karyawan) {
+            // delete related pengajuans (so they are removed when karyawan deleted)
+            if ($karyawan->pengajuan()->exists()) {
+                $karyawan->pengajuan()->each(function ($p) {
+                    $p->delete();
+                });
+            }
+        });
+    }
 
     public function user()
     {
