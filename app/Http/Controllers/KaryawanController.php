@@ -7,13 +7,14 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class KaryawanController extends Controller
 {
     public function index(Request $request)
     {
         // ini buat mengambil query dari table karyawan
-        $query = Karyawan::query();
+        $query = Karyawan::query()->where('user_id', Auth::id());
 
         // kalau ada pencarian 
         if($request->has('search') && $request->search != ''){
