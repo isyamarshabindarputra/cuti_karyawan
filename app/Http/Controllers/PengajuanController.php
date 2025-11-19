@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 
 class PengajuanController extends Controller
 {
@@ -17,23 +18,29 @@ class PengajuanController extends Controller
      */
     public function index(Request $request)
     {
-        // eager load karyawan to avoid N+1 and scope to current user
-        $query = Pengajuan::with('karyawan')->where('user_id', Auth::id());
+        $query = Pengajuan::with('karyawan');
 
-        // kalau ada pencarian, cari di jenis_cuti, keterangan, atau nama karyawan
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($pengajuan) use ($search) {
-                $pengajuan->where('jenis_cuti', 'like', "%{$search}%")
-                  ->orWhere('keterangan', 'like', "%{$search}%")
-                  ->orWhereHas('karyawan', function ($karyawan) use ($search) {
-                      $karyawan->where('name', 'like', "%{$search}%");
+        // kalau ada pencarian
+        if($request->has('search') && $request->search != ''){
+            $search = '%' . $request->search . '%';
+            $query->where(function($q) use ($search) {
+                $q->where('jenis_cuti', 'like', $search)
+                  ->orWhere('keterangan', 'like', $search)
+                  ->orWhereHas('karyawan', function($qq) use ($search) {
+                      $qq->where('name', 'like', $search)
+                         ->orWhere('nip', 'like', $search);
                   });
             });
         }
 
-        $pengajuans = $query->paginate(10)->appends($request->only('search'));
+        // jika bukan admin, batasi hanya pengajuan milik karyawan yang dimiliki user
+        if (!Auth::user() || !Auth::user()->isAdmin()) {
+            $query->whereHas('karyawan', function($q) {
+                $q->where('user_id', Auth::id());
+            });
+        }
 
+        $pengajuans = $query->paginate(10);
         return view('pengajuans.index', compact('pengajuans'));
     }
 
