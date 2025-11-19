@@ -84,22 +84,5 @@
             </button>
         </div>
     </form>
-
-    {{-- Transfer ownership form for admin --}}
-    @if(Auth::user() && Auth::user()->isAdmin())
-    <div class="mt-6 border-t pt-6">
-        <h3 class="text-lg font-semibold mb-3">Pindahkan ke Akun Lain (Admin)</h3>
-        <form action="{{ route('karyawans.transfer', $karyawans) }}" method="POST" class="flex items-center space-x-3">
-            @csrf
-            <select name="user_id" class="px-4 py-2 border rounded-lg">
-                <option value="">Pilih User</option>
-                @foreach($users as $u)
-                    <option value="{{ $u->id }}" {{ $karyawans->user_id == $u->id ? 'selected' : '' }}>{{ $u->name }} ({{ $u->email ?? '-' }})</option>
-                @endforeach
-            </select>
-            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg">Pindahkan</button>
-        </form>
-    </div>
-    @endif
 </div>
 @endsection

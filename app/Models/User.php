@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -14,7 +13,6 @@ class User extends Authenticatable
 
     protected $fillable = [
         'name',
-        'email',
         'password',
         'role'
     ];
@@ -24,18 +22,12 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
-
-    // ensure password is hashed in mutator if needed
-    public function setPasswordAttribute($value)
+    protected function casts(): array
     {
-        if ($value && !Str::startsWith($value, '$2y$')) {
-            $this->attributes['password'] = bcrypt($value);
-        } else {
-            $this->attributes['password'] = $value;
-        }
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
     }
 
     public function karyawan()

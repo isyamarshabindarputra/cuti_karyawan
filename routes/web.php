@@ -73,8 +73,6 @@ Route::middleware('auth')->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
-    Route::post('karyawans/{karyawan}/transfer', [KaryawanController::class, 'transfer'])->name('karyawans.transfer');
-
     Route::resource('karyawans', KaryawanController::class);
     
     Route::get('/', function () {

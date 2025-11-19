@@ -26,11 +26,9 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // login the new user
         Auth::login($user);
 
-        // redirect to dashboard (user already logged in)
-        return redirect()->route('dashboard')->with('success', 'Registrasi berhasil! Selamat datang.');
+        return redirect()->route('login')->with('success', 'Registrasi berhasil! Selamat datang.');
     }
 
     public function showLogin()
